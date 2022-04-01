@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-func sieveOfAtkins(ch chan int, limit int) {
+func sieveOfAtkin(ch chan int, limit int) {
 
 	sieve := make([]bool, limit)
 	for i := 0; i < limit; i++ {
@@ -54,6 +54,10 @@ func sieveOfAtkins(ch chan int, limit int) {
 	close(ch)
 }
 
+func getLimit() {
+
+}
+
 func main() {
 
 	input := os.Args[1:]
@@ -61,43 +65,44 @@ func main() {
 	limit, err := strconv.Atoi(num)
 
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("Provide an unsigned integer. Error: %v", err)
 	}
 
 	if limit <= 5 {
-		fmt.Println("Select a limit greater than 5")
-		os.Exit(1)
+		log.Fatal("Select a limit greater than 5!")
 	}
 
 	fileName := num + ".txt"
 	f, err := os.Create(fileName)
 
 	if err != nil {
-		fmt.Printf("Error creating file: %v", err)
+		log.Fatalf("Error creating file: %v", err)
 		return
 	}
 
 	defer f.Close()
-	//primers := make([]uint64, 0)
-	primeCount := 0
+
+	primes := make([]uint64, 0)
 	primeSum := uint64(0)
 	ch := make(chan int)
 
 	start := time.Now()
-	go sieveOfAtkins(ch, limit)
+
+	go sieveOfAtkin(ch, limit)
 	for prime := range ch {
-		primeCount += 1
 		primeSum += uint64(prime)
-		//primers = append(primers, uint64(prime))
-		_, err = f.WriteString(fmt.Sprintf("%v ", uint64(prime)))
-		if err != nil {
-			fmt.Printf("Error writing string: %v", err)
-		}
+		primes = append(primes, uint64(prime))
 	}
 
-	info := "\nFind all primes up to %s\nNumber of primes: %d\nSum of primes: %d"
-	s := fmt.Sprintf(info, num, primeCount, primeSum)
-	f.WriteString(s)
+	info := "\nFind all primes up to %d\nNumber of primes: %d\nSum of primes: %d"
+
+	s := fmt.Sprintf(info, limit, len(primes), primeSum)
+	_, err = f.WriteString(fmt.Sprintf("%v %v", primes, s))
+
+	if err != nil {
+		log.Fatalf("Error writing string to file. Error: %v", err)
+	}
+
 	elapsed := time.Since(start)
-	fmt.Println(s, "Time since start: ", elapsed)
+	fmt.Printf("%v \nTime since start: %v\n\n", s, elapsed)
 }
