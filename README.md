@@ -44,7 +44,7 @@ https://primes.utm.edu/howmany.html to compare my numbers and to learn more abou
             $ [output]
 
 ## 🔢 Example
-- Look at ___
+- Look at [100.txt](https://github.com/mcdxwell/sieve-of-atkin/blob/main/100.txt)
 
 ## 📝 Notes
 
