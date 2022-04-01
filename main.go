@@ -3,23 +3,22 @@ package main
 import (
 	"fmt"
 	"log"
-	"math"
 	"os"
 	"strconv"
 	"strings"
+	"time"
 )
 
 func sieveOfAtkins(ch chan int, limit int) {
 
 	sieve := make([]bool, limit)
-	limitSqrt := int(math.Sqrt(float64(limit)))
 	for i := 0; i < limit; i++ {
 		sieve[i] = false
 	}
 
 	var n int
-	for x := 1; x <= limitSqrt; x++ {
-		for y := 1; y <= limitSqrt; y++ {
+	for x := 1; x*x <= limit; x++ {
+		for y := 1; y*y <= limit; y++ {
 			n = (4 * x * x) + (y * y)
 			if n <= limit && (n%12 == 1 || n%12 == 5) {
 				sieve[n] = !sieve[n]
@@ -79,15 +78,17 @@ func main() {
 	}
 
 	defer f.Close()
-
+	//primers := make([]uint64, 0)
 	primeCount := 0
 	primeSum := uint64(0)
 	ch := make(chan int)
 
+	start := time.Now()
 	go sieveOfAtkins(ch, limit)
 	for prime := range ch {
 		primeCount += 1
 		primeSum += uint64(prime)
+		//primers = append(primers, uint64(prime))
 		_, err = f.WriteString(fmt.Sprintf("%v ", uint64(prime)))
 		if err != nil {
 			fmt.Printf("Error writing string: %v", err)
@@ -97,5 +98,6 @@ func main() {
 	info := "\nFind all primes up to %s\nNumber of primes: %d\nSum of primes: %d"
 	s := fmt.Sprintf(info, num, primeCount, primeSum)
 	f.WriteString(s)
-	fmt.Printf(s)
+	elapsed := time.Since(start)
+	fmt.Println(s, "Time since start: ", elapsed)
 }
