@@ -61,6 +61,8 @@ https://en.wikipedia.org/wiki/Sieve_of_Eratosthenes
 
 https://en.wikipedia.org/wiki/Sieve_theory
 
+https://en.wikipedia.org/wiki/Generation_of_primes
+
 https://www.geeksforgeeks.org/sieve-of-atkin/
 
 https://github.com/jmoiron/euler.go/blob/master/010.go
