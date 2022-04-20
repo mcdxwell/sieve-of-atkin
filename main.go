@@ -54,10 +54,6 @@ func sieveOfAtkin(ch chan int, limit int) {
 	close(ch)
 }
 
-func getLimit() {
-
-}
-
 func main() {
 
 	input := os.Args[1:]
